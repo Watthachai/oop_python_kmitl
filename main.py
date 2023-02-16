@@ -1,44 +1,35 @@
-#### Start Field of data ####
+from fastapi import FastAPI
 
-#### END Field of data ####
+app = FastAPI()
 
-class UserAccount:
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-class PaymentMethod:
-    def __init__(self, transaction_id, firstname, lastname, cvv, card_number, expire_date):
-        self.transaction_id = transaction_id
-        self.firstname = firstname
-        self.lastname = lastname
-        self.cvv = cvv
-        self.card_number = card_number
-        self.expire_date = expire_date
+# New
+book_db = [
+    {
+        "title":"The C Programming",
+        "price": 720
+    },
+    {
+        "title":"Learn Python the Hard Way",
+        "price": 870
+    },
+    {
+        "title":"JavaScript: The Definitive Guide",
+        "price": 1369
+    },
+    {
+        "title":"Python for Data Analysis",
+        "price": 1394
+    },
+    {
+        "title":"Clean Code",
+        "price": 1500
+    },
+]
 
+@app.get("/books/{book_id}")
+async def get_book(book_id: int):
+    return book_db[book_id-1]
 
-class Movies:
-    def __init__(self, movie_id, movie_name, year, rating, lenght, description,  cast, genres, movie_category, poster):
-        self.movie_id = movie_id
-        self.movie_name = movie_name
-        self.year =     year
-        self.rating = rating
-        self.lenght = lenght
-        self.description = description
-        self.cast = cast
-        self.genres = genres
-        self.movie_category = movie_category
-        self.poster = poster
-
-
-class MovieSeries:
-    def __init__(self, series_id, series_name, year, rating, lenght, description,  cast, genres, movie_category, poster):
-        self.series_id = series_id
-        self.series_name = series_name
-        self.year =     year
-        self.rating = rating
-        self.lenght = lenght
-        self.description = description
-        self.cast = cast
-        self.genres = genres
-        self.movie_category = movie_category
-        self.poster = poster
+@app.get("/books/{book_id}/title")
+async def get_book_title(book_id: int):
+    return book_db[book_id-1]["title"]
