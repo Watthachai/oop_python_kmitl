@@ -29,7 +29,3 @@ book_db = [
 @app.get("/books/{book_id}")
 async def get_book(book_id: int):
     return book_db[book_id-1]
-
-@app.get("/books/{book_id}/title")
-async def get_book_title(book_id: int):
-    return book_db[book_id-1]["title"]
