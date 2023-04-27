@@ -1,0 +1,43 @@
+<!-- movies/movie_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie List</title>
+    <style>
+        h1 {
+            color: #000;
+            font-size: 24px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        function confirmDelete(movieId) {
+            if (confirm('Are you sure you want to delete this movie?')) {
+                window.location.href = '/movies/' + movieId + '/delete/';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Movie List</h1>
+    <ul>
+    {% for movie in movies %}
+        <li><a href="{% url 'movie_detail' movie_id=movie.id %}">{{ movie.title }}</a></li>
+    {% empty %}
+        <li>No movies available.</li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'movie_create' %}">Add Movie</a>
+    
+</body>
+</html>
