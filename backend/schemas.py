@@ -5,7 +5,7 @@ import pydantic as _pydantic
 class _UserBase(_pydantic.BaseModel):
     email: str
 
-class UserCreate(_pydantic.BaseModel):
+class UserCreate(_UserBase):
     hashed_password: str
 
     class Config:
@@ -13,7 +13,7 @@ class UserCreate(_pydantic.BaseModel):
 
 class User(_UserBase):
     id: int
-
+    
     class Config:
         orm_mode = True
         
@@ -21,15 +21,16 @@ class _LeadBase(_pydantic.BaseModel):
     first_name: str
     last_name: str
     email: str
-    
+    note: str
+
 class LeadCreate(_LeadBase):
     pass
 
 class Lead(_LeadBase):
     id: int
     owner_id: int
-    date_create: _dt.datetime
-    date_last_updated: _dt.datetime
-    
+    date_created: _dt.datetime
+    date_last_update: _dt.datetime
+
     class Config:
         orm_mode = True
