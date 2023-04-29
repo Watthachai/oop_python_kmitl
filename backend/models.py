@@ -21,10 +21,10 @@ class Lead(_database.Base):
     __tablename__ = "leads"
     id = _sql.Column(_sql.Integer, primary_key=True, index=True)
     owner_id = _sql.Column(_sql.Integer, _sql.ForeignKey("users.id"))
-    fisrt_name = _sql.Column(_sql.String, index=True)
+    first_name = _sql.Column(_sql.String, index=True)
     last_name = _sql.Column(_sql.String, index=True)
     email = _sql.Column(_sql.String, index=True)
-    note = _sql.Column(_sql.String, index=True, default=" ")
+    note = _sql.Column(_sql.String, index=True, default="")
     date_created = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
     date_last_updated = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
     
