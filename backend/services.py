@@ -3,6 +3,7 @@ import database as _database, models as _models, schemas as _schemas
 import fastapi as _fastapi
 import fastapi.security as _security
 import jwt as _jwt
+import datetime as _dt
 import sqlalchemy.orm as _orm
 import passlib.hash as _hash
 
@@ -49,8 +50,9 @@ async def create_token(user: _models.User):
     
     return dict(access_token=token, token_type="bearer")
 
-async def get_current_user(db: _orm.Session = _fastapi.Depends(get_db), 
-                           token: str = _fastapi.Depends(oauth2schema)
+async def get_current_user(
+    db: _orm.Session = _fastapi.Depends(get_db), 
+    token: str = _fastapi.Depends(oauth2schema)
     ):
     try:
         payload = _jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
@@ -89,3 +91,24 @@ async def get_lead(lead_id: int, user: _schemas.User, db: _orm.Session):
     lead = await _lead_selector(lead_id=lead_id, user=user, db=db)
     
     return _schemas.Lead.from_orm(lead)
+
+async def delete_lead(lead_id: int, user: _schemas.User, db: _orm.Session):
+    lead =  await _lead_selector(lead_id, user, db)
+    
+    db.delete(lead)
+    db.commit()
+    
+async def update_lead(lead_id: int, lead: _schemas.LeadCreate, user: _schemas.User, db: _orm.Session):
+    lead_db = await _lead_selector(lead_id, user, db)
+    
+    lead_db.first_name = lead.first_name
+    lead_db.last_name = lead.last_name
+    lead_db.email = lead.email
+    lead_db.note = lead.note
+    lead_db.date_last_updated = _dt.datetime.utcnow()
+    
+    db.commit()
+    db.refresh(lead_db)
+    
+    return _schemas.Lead.from_orm(lead_db)
+    
