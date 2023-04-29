@@ -59,3 +59,33 @@ async def get_current_user(db: _orm.Session = _fastapi.Depends(get_db),
         raise _fastapi.HTTPException(status_code=401, detail="Invalid Email or Password")
     
     return _schemas.User.from_orm(user)
+
+async def create_lead(user: _schemas.User, db: _orm.Session, lead: _schemas.LeadCreate):
+    lead = _models.Lead(**lead.dict(), owner_id=user.id)
+    db.add(lead)
+    db.commit()
+    db.refresh(lead)
+    return _schemas.Lead.from_orm(lead)
+
+async def get_leads(user: _schemas.User, db: _orm.Session):
+    leads = db.query(_models.Lead).filter_by(owner_id=user.id)
+    
+    return list(map(_schemas.Lead.from_orm, leads))
+
+async def _lead_selector(lead_id: int, user: _schemas.User, db: _orm.Session):
+    lead = (
+        db.query(_models.Lead)
+        .filter_by(owner_id=user.id)
+        .filter(_models.Lead.id == lead_id)
+        .first()
+    )
+    
+    if lead is None:
+        raise _fastapi.HTTPException(status_code=404, detail="Lead does not exist")
+    
+    return lead
+
+async def get_lead(lead_id: int, user: _schemas.User, db: _orm.Session):
+    lead = await _lead_selector(lead_id=lead_id, user=user, db=db)
+    
+    return _schemas.Lead.from_orm(lead)

@@ -30,7 +30,7 @@ class Lead(_LeadBase):
     id: int
     owner_id: int
     date_created: _dt.datetime
-    date_last_update: _dt.datetime
+    date_last_updated: _dt.datetime
 
     class Config:
         orm_mode = True
