@@ -4,6 +4,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Header from "./components/Header";
 import { UserContext } from "./context/UserContext";
+import Table from "./components/Table";
 
 const App = () => {
   const [message, setMessage] = useState("");
@@ -35,17 +36,14 @@ const App = () => {
     <Header title={message}/>
     <div className="columns">
       <div className="column"></div>
-      <div className="column"></div>
       <div className="column m-5 is-two-thirds">
-        {
-          !token ? (
+        {!token ? (
             <div className="columns">
               <Register/> <Login/>
             </div>
           ) : (
-            <p>Table</p>
-          )
-        }
+            <Table/>
+          )}
       </div>
       <div className="column"></div>
     </div>
