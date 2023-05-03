@@ -57,6 +57,7 @@ class Series(_SereisBase):
     class Config:
         orm_mode = True
 
+
 class _SesonBase(_pydantic.BaseModel):
     season_number: int
     release_date: Optional[_dt.datetime] = None
