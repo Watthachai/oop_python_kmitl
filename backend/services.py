@@ -1,11 +1,14 @@
 import fastapi as _fastapi
 import fastapi.security as _security
+from fastapi import HTTPException
 import jwt as _jwt
 import datetime as _dt
 import sqlalchemy.orm as _orm
 import passlib.hash as _hash
 
 import database as _database, models as _models, schemas as _schemas
+
+
 
 oauth2schema = _security.OAuth2PasswordBearer(tokenUrl="/api/token")
 
@@ -176,7 +179,6 @@ async def get_seasons(series_id: int, db: _orm.Session):
 
 async def get_season_by_id(series_id: int, season_id: int, db: _orm.Session):
     season = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
-
     return _schemas.Season.from_orm(season)
 
 async def create_season(series_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
@@ -187,15 +189,13 @@ async def create_season(series_id: int, season: _schemas.SeasonCreate, db: _orm.
     db.refresh(season)
     return _schemas.Season.from_orm(season)
 
-async def update_season(series_id: int, season_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
+"""async def update_season(series_id: int, season_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
     season_db = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
-
-
     
     db.commit()
     db.refresh(season_db)
 
-    return _schemas.Season.from_orm(season_db)
+    return _schemas.Season.from_orm(season_db)"""
 
 async def delete_season(series_id: int, season_id: int, db: _orm.Session):
     season = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
@@ -260,6 +260,23 @@ async def create_movie(movie: _schemas.MovieCreate, db: _orm.Session):
     db.commit()
     db.refresh(movie)
     return _schemas.Movie.from_orm(movie)
+
+async def update_movie(movie_id: int, movie: _schemas.MovieCreate, db: _orm.Session): #แก้แล้ว
+    movie_db = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
+
+    if not movie_db:
+        raise HTTPException(status_code=404, detail="Movie not found")
+
+    # update movie data
+    movie_data = movie.dict(exclude_unset=True)
+    for key, value in movie_data.items():
+        setattr(movie_db, key, value)
+
+    db.commit()
+    db.refresh(movie_db)
+
+    return _schemas.Movie.from_orm(movie_db)
+
 
 async def update_movie(movie_id: int, movie: _schemas.MovieCreate, db: _orm.Session):
     movie_db = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
