@@ -128,3 +128,224 @@ async def update_lead(lead_id: int, lead: _schemas.LeadCreate, user: _schemas.Us
 
     return _schemas.Lead.from_orm(lead_db)
 
+
+#! Series Section
+
+async def get_series(db: _orm.Session):
+    series = db.query(_models.Series).all()
+
+    return list(map(_schemas.Series.from_orm, series))
+
+async def get_series_by_id(series_id: int, db: _orm.Session):
+    series = db.query(_models.Series).filter(_models.Series.series_id == series_id).first()
+    return _schemas.Series.from_orm(series)
+
+
+
+async def create_series(series: _schemas.SeriesCreate, db: _orm.Session):
+    series = _models.Series(**series.dict())
+    
+    db.add(series)
+    db.commit()
+    db.refresh(series)
+    return _schemas.Series.from_orm(series)
+
+async def update_series(series_id: int, series: _schemas.SeriesCreate, db: _orm.Session):
+    series_db = db.query(_models.Series).filter(_models.Series.series_id == series_id).first()
+
+    series_db.title = series.title
+    series_db.description = series.description
+    series_db.cover_image = series.cover_image
+    
+    db.commit()
+    db.refresh(series_db)
+
+    return _schemas.Series.from_orm(series_db)
+
+async def delete_series(series_id: int, db: _orm.Session):
+    series = db.query(_models.Series).filter(_models.Series.id == series_id).first()
+
+    db.delete(series)
+    db.commit()
+
+#!sub table from Series = season
+async def get_seasons(series_id: int, db: _orm.Session):
+    seasons = db.query(_models.Season).filter(_models.Season.series_id == series_id).all()
+
+    return list(map(_schemas.Season.from_orm, seasons))
+
+async def get_season_by_id(series_id: int, season_id: int, db: _orm.Session):
+    season = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
+
+    return _schemas.Season.from_orm(season)
+
+async def create_season(series_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
+    season = _models.Season(**season.dict(), series_id=series_id)
+
+    db.add(season)
+    db.commit()
+    db.refresh(season)
+    return _schemas.Season.from_orm(season)
+
+async def update_season(series_id: int, season_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
+    season_db = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
+
+
+    
+    db.commit()
+    db.refresh(season_db)
+
+    return _schemas.Season.from_orm(season_db)
+
+async def delete_season(series_id: int, season_id: int, db: _orm.Session):
+    season = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
+
+    db.delete(season)
+    db.commit()
+
+#!sub table from Season = episode
+async def get_episodes(series_id: int, season_id: int, db: _orm.Session):
+    episodes = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).all()
+
+    return list(map(_schemas.Episode.from_orm, episodes))
+
+async def get_episode_by_id(series_id: int, season_id: int, episode_id: int, db: _orm.Session):
+    episode = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).filter(_models.Episode.episode_id == episode_id).first()
+
+    return _schemas.Episode.from_orm(episode)
+
+async def create_episode(series_id: int, season_id: int, episode: _schemas.EpisodeCreate, db: _orm.Session):
+    episode = _models.Episode(**episode.dict(), series_id=series_id, season_id=season_id)
+
+    db.add(episode)
+    db.commit()
+    db.refresh(episode)
+    return _schemas.Episode.from_orm(episode)
+
+async def update_episode(series_id: int, season_id: int, episode_id: int, episode: _schemas.EpisodeCreate, db: _orm.Session):
+    episode_db = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).filter(_models.Episode.episode_id == episode_id).first()
+
+    episode_db.title = episode.title
+    episode_db.description = episode.description
+    episode_db.video_url = episode.video_url
+    episode_db.thumbnail_url = episode.thumbnail_url
+    episode_db.release_date = _dt.datetime.utcnow()
+    
+    db.commit()
+    db.refresh(episode_db)
+
+    return _schemas.Episode.from_orm(episode_db)
+
+async def delete_episode(series_id: int, season_id: int, episode_id: int, db: _orm.Session):
+    episode = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).filter(_models.Episode.episode_id == episode_id).first()
+
+    db.delete(episode)
+    db.commit()
+
+
+#! Movie Section
+async def get_movies(db: _orm.Session):
+    movies = db.query(_models.Movie).all()
+
+    return list(map(_schemas.Movie.from_orm, movies))
+
+async def get_movie_by_id(movie_id: int, db: _orm.Session):
+    movie = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
+    return _schemas.Movie.from_orm(movie)
+
+async def create_movie(movie: _schemas.MovieCreate, db: _orm.Session):
+    movie = _models.Movie(**movie.dict())
+    
+    db.add(movie)
+    db.commit()
+    db.refresh(movie)
+    return _schemas.Movie.from_orm(movie)
+
+async def update_movie(movie_id: int, movie: _schemas.MovieCreate, db: _orm.Session):
+    movie_db = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
+
+    movie_db.title = movie.title
+    movie_db.description = movie.description
+    movie_db.cover_image = movie.cover_image
+    
+    db.commit()
+    db.refresh(movie_db)
+
+    return _schemas.Movie.from_orm(movie_db)
+
+async def delete_movie(movie_id: int, db: _orm.Session):
+    movie = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
+
+    db.delete(movie)
+    db.commit()
+
+#!sub table from Movie = Genres
+async def get_genre(movie_id: int, db: _orm.Session):
+    genres = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).all()
+
+    return list(map(_schemas.Genre.from_orm, genres))
+
+async def get_genre_by_id(movie_id: int, genre_id: int, db: _orm.Session):
+    genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).filter(_models.MovieGenre.genre_id == genre_id).first()
+
+    return _schemas.Genre.from_orm(genre)
+
+async def create_genre(movie_id: int, genre: _schemas.GenreCreate, db: _orm.Session):
+    genre = _models.MovieGenre(**genre.dict(), movie_id=movie_id)
+
+    db.add(genre)
+    db.commit()
+    db.refresh(genre)
+    return _schemas.Genre.from_orm(genre)
+
+async def update_genre(movie_id: int, genre_id: int, genre: _schemas.GenreCreate, db: _orm.Session):
+    genre_db = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).filter(_models.MovieGenre.genre_id == genre_id).first()
+
+    genre_db.genre_name = genre.genre_name
+    
+    db.commit()
+    db.refresh(genre_db)
+
+    return _schemas.Genre.from_orm(genre_db)
+
+async def delete_genre(movie_id: int, genre_id: int, db: _orm.Session):
+    genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).filter(_models.MovieGenre.genre_id == genre_id).first()
+
+    db.delete(genre)
+    db.commit()
+
+#!sub table from Movie = MovieGenre
+async def get_movie_genres(movie_id: int, db: _orm.Session):
+    genres = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).all()
+
+    return list(map(_schemas.MovieGenre.from_orm, genres))
+
+async def get_movie_genre_by_id(movie_id: int, genre_id: int, db: _orm.Session):
+    genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).filter(_models.MovieGenre.genre_id == genre_id).first()
+
+    return _schemas.MovieGenre.from_orm(genre)
+
+async def create_movie_genre(movie_id: int, genre: _schemas.MovieGenreCreate, db: _orm.Session):
+    genre = _models.MovieGenre(**genre.dict(), movie_id=movie_id)
+
+    db.add(genre)
+    db.commit()
+    db.refresh(genre)
+    return _schemas.MovieGenre.from_orm(genre)
+
+async def update_movie_genre(movie_id: int, genre_id: int, genre: _schemas.MovieGenreCreate, db: _orm.Session):
+    genre_db = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).filter(_models.MovieGenre.genre_id == genre_id).first()
+
+    genre_db.genre = genre.genre_id
+    
+    db.commit()
+    db.refresh(genre_db)
+
+    return _schemas.MovieGenre.from_orm(genre_db)
+
+async def delete_movie_genre(movie_id: int, genre_id: int, db: _orm.Session):
+    genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).filter(_models.MovieGenre.genre_id == genre_id).first()
+
+    db.delete(genre)
+    db.commit()
+
