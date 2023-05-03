@@ -65,8 +65,8 @@ class SeasonCreate(_SesonBase):
     pass
 
 class Season(_SesonBase):
-    season_number: int
     series_id: int
+    season_number: int
     class Config:
         orm_mode = True
         
@@ -82,9 +82,10 @@ class EpisodeCreate(_EpisodeBase):
     pass
 
 class Episode(_EpisodeBase):
-    episode_id: int
-    season_id: int
     series_id: int
+    season_number: int
+    episode_id: int
+    
     class Config:
         orm_mode = True
 

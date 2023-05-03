@@ -47,9 +47,9 @@ class Series(_database.Base):
 
 class Season(_database.Base):
     __tablename__ = "season"
-    # id = _sql.Column(_sql.Integer, primary_key=True)
-    season_number = _sql.Column(_sql.Integer,primary_key=True, index=True)
     series_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"), primary_key=True, index=True)
+    season_number = _sql.Column(_sql.Integer,primary_key=True, index=True)
+    
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
     
     series = _orm.relationship("Series", back_populates="seasons")
@@ -57,9 +57,10 @@ class Season(_database.Base):
 
 class Episode(_database.Base):
     __tablename__ = "episodes"
-    episode_id = _sql.Column(_sql.Integer,primary_key=True,index=True)
-    season_number = _sql.Column(_sql.Integer, _sql.ForeignKey("season.season_number"))
     sereis_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"))
+    season_number = _sql.Column(_sql.Integer, _sql.ForeignKey("season.season_number"))
+    episode_id = _sql.Column(_sql.Integer,primary_key=True,index=True)
+
     title = _sql.Column(_sql.String,index=True)
     description = _sql.Column(_sql.String,index=True)
     video_url = _sql.Column(_sql.String,index=True)
