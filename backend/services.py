@@ -163,7 +163,7 @@ async def update_series(series_id: int, series: _schemas.SeriesCreate, db: _orm.
     return _schemas.Series.from_orm(series_db)
 
 async def delete_series(series_id: int, db: _orm.Session):
-    series = db.query(_models.Series).filter(_models.Series.id == series_id).first()
+    series = db.query(_models.Series).filter(_models.Series.series_id == series_id).first()
 
     db.delete(series)
     db.commit()
@@ -181,7 +181,7 @@ async def get_season_by_id(series_id: int, season_id: int, db: _orm.Session):
 
 async def create_season(series_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
     season = _models.Season(**season.dict(), series_id=series_id)
-
+    
     db.add(season)
     db.commit()
     db.refresh(season)
@@ -203,7 +203,7 @@ async def delete_season(series_id: int, season_id: int, db: _orm.Session):
     db.delete(season)
     db.commit()
 
-#!sub table from Season = episode
+"""#!sub table from Season = episode
 async def get_episodes(series_id: int, season_id: int, db: _orm.Session):
     episodes = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).all()
 
@@ -348,4 +348,4 @@ async def delete_movie_genre(movie_id: int, genre_id: int, db: _orm.Session):
 
     db.delete(genre)
     db.commit()
-
+"""
