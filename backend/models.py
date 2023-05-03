@@ -18,7 +18,7 @@ class User(_database.Base):
     #subscriptions = _orm.relationship("Subscription", back_populates="user")
 
     def verify_password(self, password: str):
-        return _hash.bcrypt.verify(password, self.hashed_password)
+        return _hash.bcrypt.verify(password, self.hashed_password) # type: ignore
 
 
 class Lead(_database.Base):
@@ -37,6 +37,7 @@ class Lead(_database.Base):
 
 class Series(_database.Base):
     __tablename__ = "series"
+    
     series_id = _sql.Column(_sql.Integer, primary_key=True, index=True)
     title = _sql.Column(_sql.String, index=True)
     description = _sql.Column(_sql.String, index=True)
@@ -47,24 +48,30 @@ class Series(_database.Base):
 
 class Season(_database.Base):
     __tablename__ = "season"
-    # id = _sql.Column(_sql.Integer, primary_key=True)
-    season_number = _sql.Column(_sql.Integer,primary_key=True, index=True)
-    series_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"), primary_key=True, index=True)
+    season_id = _sql.Column(_sql.Integer, primary_key=True, index=True)
+    series_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"), index=True)
+    season_number = _sql.Column(_sql.String, index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
     
     series = _orm.relationship("Series", back_populates="seasons")
+    episodes = _orm.relationship("Episode", back_populates="season")
 
 
 class Episode(_database.Base):
     __tablename__ = "episodes"
-    episode_id = _sql.Column(_sql.Integer,primary_key=True,index=True)
-    season_number = _sql.Column(_sql.Integer, _sql.ForeignKey("season.season_number"))
-    sereis_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"))
+    episode_id = _sql.Column(_sql.Integer, primary_key=True,index=True)
+    season_id = _sql.Column(_sql.Integer, _sql.ForeignKey("season.season_id"), index=True)
+    episode_number = _sql.Column(_sql.String,index=True)
     title = _sql.Column(_sql.String,index=True)
     description = _sql.Column(_sql.String,index=True)
     video_url = _sql.Column(_sql.String,index=True)
     thumbnail_url = _sql.Column(_sql.String,index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
+    
+    
+    season = _orm.relationship("Season", back_populates="episodes")
+    
+    
 
 
 

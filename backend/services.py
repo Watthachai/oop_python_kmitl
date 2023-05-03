@@ -182,67 +182,35 @@ async def get_season_by_id(series_id: int, season_id: int, db: _orm.Session):
     return _schemas.Season.from_orm(season)
 
 async def create_season(series_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
-    season = _models.Season(**season.dict(), series_id=series_id)
+    season = _models.Season(**season.dict(), series_id=series_id )
     
     db.add(season)
     db.commit()
     db.refresh(season)
     return _schemas.Season.from_orm(season)
 
-"""async def update_season(series_id: int, season_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
-    season_db = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
-    
-    db.commit()
-    db.refresh(season_db)
-
-    return _schemas.Season.from_orm(season_db)"""
-
 async def delete_season(series_id: int, season_id: int, db: _orm.Session):
     season = db.query(_models.Season).filter(_models.Season.series_id == series_id).filter(_models.Season.season_id == season_id).first()
 
     db.delete(season)
     db.commit()
+    
 
-"""#!sub table from Season = episode
-async def get_episodes(series_id: int, season_id: int, db: _orm.Session):
-    episodes = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).all()
+#!sub table from Season = episode
+async def get_episodes(season_id: int, db: _orm.Session):
+    episodes = db.query(_models.Episode).filter(_models.Episode.season_id == season_id).all()
 
     return list(map(_schemas.Episode.from_orm, episodes))
 
-async def get_episode_by_id(series_id: int, season_id: int, episode_id: int, db: _orm.Session):
-    episode = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).filter(_models.Episode.episode_id == episode_id).first()
-
-    return _schemas.Episode.from_orm(episode)
-
-async def create_episode(series_id: int, season_id: int, episode: _schemas.EpisodeCreate, db: _orm.Session):
-    episode = _models.Episode(**episode.dict(), series_id=series_id, season_id=season_id)
-
+async def create_episode(season_id: int, episode: _schemas.EpisodeCreate, db: _orm.Session):
+    episode = _models.Episode(**episode.dict(), season_id=season_id )
+    
     db.add(episode)
     db.commit()
     db.refresh(episode)
-    return _schemas.Episode.from_orm(episode)
-
-async def update_episode(series_id: int, season_id: int, episode_id: int, episode: _schemas.EpisodeCreate, db: _orm.Session):
-    episode_db = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).filter(_models.Episode.episode_id == episode_id).first()
-
-    episode_db.title = episode.title
-    episode_db.description = episode.description
-    episode_db.video_url = episode.video_url
-    episode_db.thumbnail_url = episode.thumbnail_url
-    episode_db.release_date = _dt.datetime.utcnow()
+    return _schemas.Episode.from_orm(episode)  
     
-    db.commit()
-    db.refresh(episode_db)
-
-    return _schemas.Episode.from_orm(episode_db)
-
-async def delete_episode(series_id: int, season_id: int, episode_id: int, db: _orm.Session):
-    episode = db.query(_models.Episode).filter(_models.Episode.series_id == series_id).filter(_models.Episode.season_id == season_id).filter(_models.Episode.episode_id == episode_id).first()
-
-    db.delete(episode)
-    db.commit()
-
-
+    
 #! Movie Section
 async def get_movies(db: _orm.Session):
     movies = db.query(_models.Movie).all()
@@ -331,6 +299,7 @@ async def delete_genre(movie_id: int, genre_id: int, db: _orm.Session):
     db.delete(genre)
     db.commit()
 
+
 #!sub table from Movie = MovieGenre
 async def get_movie_genres(movie_id: int, db: _orm.Session):
     genres = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).all()
@@ -365,4 +334,4 @@ async def delete_movie_genre(movie_id: int, genre_id: int, db: _orm.Session):
 
     db.delete(genre)
     db.commit()
-"""
+

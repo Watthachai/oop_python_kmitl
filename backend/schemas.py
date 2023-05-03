@@ -58,20 +58,20 @@ class Series(_SereisBase):
 
 
 class _SesonBase(_pydantic.BaseModel):
-    season_number: int
+    season_number: str
     release_date: Optional[_dt.datetime] = None
 
 class SeasonCreate(_SesonBase):
     pass
 
 class Season(_SesonBase):
-    season_number: int
-    series_id: int
+    id: int
     class Config:
         orm_mode = True
         
 
 class _EpisodeBase(_pydantic.BaseModel):
+    episode_number: str
     title: str
     description: Optional[str] = None
     thumbnail_url: Optional[str] = None
@@ -82,9 +82,8 @@ class EpisodeCreate(_EpisodeBase):
     pass
 
 class Episode(_EpisodeBase):
-    episode_id: int
-    season_id: int
-    series_id: int
+    id: int
+    
     class Config:
         orm_mode = True
 
