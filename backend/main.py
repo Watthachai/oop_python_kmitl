@@ -126,42 +126,46 @@ async def delete_series(
     return {"message", "Successfully Deleted"}
 
 #! Subseries = Season Section
-@app.get("/api/series/seasons", response_model=List[_schemas.Season])
+@app.get("/api/series/{series_id}/seasons/", response_model=List[_schemas.Season])
 async def get_seasons(
+    series_id: int,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.get_seasons(db=db)
+    return await _services.get_seasons(db=db, series_id=series_id)
 
-@app.get("/api/series/seasons{season_id}", response_model=_schemas.Season)
+@app.get("/api/series/{series_id}/seasons/{season_number}", response_model=_schemas.Season)
 async def get_season_by_id(
+    series_id: int,
     season_id: int,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.get_season_by_id(db=db, season_id=season_id)
+    return await _services.get_season_by_id(db=db, series_id=series_id, season_id=season_id)
 
-@app.post("/api/series/{series_id}/seasons", response_model=_schemas.Season)
+@app.post("/api/series/{series_id}/seasons/", response_model=_schemas.Season)
 async def create_season(
     series_id: int, 
     season: _schemas.SeasonCreate, 
     db: _orm.Session = _fastapi.Depends(_services.get_db)):
     return await _services.create_season(db=db, series_id=series_id, season=season)
 
-@app.put("/api/series/seasons{season_id}", response_model=_schemas.Season)
+
+"""@app.put("/api/series/{series_id}/seasons/{season_id}", response_model=_schemas.Season)
 async def update_season(
+    series_id: int,
     season_id: int,
     season: _schemas.SeasonCreate,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.update_season(db=db, season_id=season_id, season=season)
+    return await _services.update_season(db=db, series_id=series_id, season_id=season_id, season=season)"""
 
-@app.delete("/api/series/seasons/{season_id}", status_code=204)
+@app.delete("/api/series/{series_id}/seasons/{season_id}", status_code=204)
 async def delete_season(
+    series_id: int,
     season_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
+    db: _orm.Session = _fastapi.Depends(_services.get_db)
 ):
-    await _services.delete_season(db=db, season_id=season_id)
-    return {"message", "Successfully Deleted"}
-
+    await _services.delete_season(db=db, series_id=series_id, season_id=season_id)
+    return {"message": "Successfully Deleted"}
 
 """#! Subseries = Episode Section
 @app.get("/api/series/seasons/episodes", response_model=List[_schemas.Episode])

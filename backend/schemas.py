@@ -6,7 +6,6 @@ from typing import List, Optional
 
 class _UserBase(_pydantic.BaseModel):
     email: str
-    user_type: str  
 
 class UserCreate(_UserBase):
     hashed_password: str
@@ -17,7 +16,7 @@ class UserCreate(_UserBase):
 
 class User(_UserBase):
     id: int
-
+    user_type: str  # admin, customer, guest
     class Config:
         orm_mode = True
 
@@ -66,7 +65,7 @@ class SeasonCreate(_SesonBase):
     pass
 
 class Season(_SesonBase):
-    season_id: int
+    season_number: int
     series_id: int
     class Config:
         orm_mode = True

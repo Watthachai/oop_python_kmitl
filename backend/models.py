@@ -37,23 +37,28 @@ class Lead(_database.Base):
 
 class Series(_database.Base):
     __tablename__ = "series"
-    series_id = _sql.Column(_sql.Integer,primary_key=True,index=True)
-    title = _sql.Column(_sql.String,index=True)
-    description = _sql.Column(_sql.String,index=True)
+    series_id = _sql.Column(_sql.Integer, primary_key=True, index=True)
+    title = _sql.Column(_sql.String, index=True)
+    description = _sql.Column(_sql.String, index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
-    cover_image = _sql.Column(_sql.String,index=True)
+    cover_image = _sql.Column(_sql.String, index=True)
     
+    seasons = _orm.relationship("Season", back_populates="series", lazy="dynamic")
+
 class Season(_database.Base):
     __tablename__ = "season"
-    season_id = _sql.Column(_sql.Integer,primary_key=True,index=True)
-    series_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"))
-    season_number = _sql.Column(_sql.Integer,index=True)
+    # id = _sql.Column(_sql.Integer, primary_key=True)
+    season_number = _sql.Column(_sql.Integer,primary_key=True, index=True)
+    series_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"), primary_key=True, index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
+    
+    series = _orm.relationship("Series", back_populates="seasons")
+
 
 class Episode(_database.Base):
     __tablename__ = "episodes"
     episode_id = _sql.Column(_sql.Integer,primary_key=True,index=True)
-    season_id = _sql.Column(_sql.Integer, _sql.ForeignKey("season.season_id"))
+    season_number = _sql.Column(_sql.Integer, _sql.ForeignKey("season.season_number"))
     sereis_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"))
     title = _sql.Column(_sql.String,index=True)
     description = _sql.Column(_sql.String,index=True)
