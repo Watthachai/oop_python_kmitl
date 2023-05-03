@@ -207,7 +207,7 @@ async def delete_episode(
     return {"message": "Successfully Deleted"}
 
 
-"""#! Movie Section
+#! Movie Section
 @app.get("/api/movies", response_model=List[_schemas.Movie])
 async def get_movies(
     db: _orm.Session = _fastapi.Depends(_services.get_db),
@@ -244,6 +244,8 @@ async def delete_movie(
     await _services.delete_movie(db=db, movie_id=movie_id)
     return {"message", "Successfully Deleted"}
 
+
+"""
 #! Sub Movie = Genre Section
 @app.get("/api/genres", response_model=List[_schemas.Genre])
 async def get_genre(
@@ -280,6 +282,8 @@ async def delete_genre(
 ):
     await _services.delete_genre(db=db, genre_id=genre_id)
     return {"message", "Successfully Deleted"}
+
+
 
 #! SubMovie = MovieGenre Section
 @app.get("/api/moviegenres", response_model=List[_schemas.MovieGenre])

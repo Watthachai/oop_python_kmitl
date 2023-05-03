@@ -235,7 +235,7 @@ async def delete_episode(series_id: int, season_number: int, episode_id: int, db
     db.delete(episode)
     db.commit()
 
-"""
+
 #! Movie Section
 async def get_movies(db: _orm.Session):
     movies = db.query(_models.Movie).all()
@@ -288,7 +288,7 @@ async def delete_movie(movie_id: int, db: _orm.Session):
 
     db.delete(movie)
     db.commit()
-
+"""
 #!sub table from Movie = Genres
 async def get_genre(movie_id: int, db: _orm.Session):
     genres = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_id == movie_id).all()
