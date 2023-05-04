@@ -13,7 +13,6 @@ class UserCreate(_UserBase):
     class Config:
         orm_mode = True
 
-
 class User(_UserBase):
     id: int
     user_type: str  # admin, customer, guest
@@ -43,50 +42,51 @@ class Lead(_LeadBase):
         orm_mode = True
 
 
-#! Series BASE
-class _SereisBase(_pydantic.BaseModel):
+#! TVSeries BASE
+class _SeriesBase(_pydantic.BaseModel):
     title: str
     description: Optional[str] = None
     release_date: Optional[_dt.datetime] = None
     cover_image: Optional[str] = None
-class SeriesCreate(_SereisBase):
+
+class SeriesCreate(_SeriesBase):
     pass
-class Series(_SereisBase):
+
+class Series(_SeriesBase):
     series_id: int
     class Config:
         orm_mode = True
 
-
-class _SesonBase(_pydantic.BaseModel):
-    season_number: str
+#* Season BASE
+class _SeasonBase(_pydantic.BaseModel):
+    title: str
     release_date: Optional[_dt.datetime] = None
+    series_id: int
 
-class SeasonCreate(_SesonBase):
+class SeasonCreate(_SeasonBase):
     pass
 
-class Season(_SesonBase):
-    id: int
+class Season(_SeasonBase):
+    season_id: int
     class Config:
-        orm_mode = True
-        
+        orm_mode = True    
 
+#? Episode BASE
 class _EpisodeBase(_pydantic.BaseModel):
-    episode_number: str
     title: str
     description: Optional[str] = None
-    thumbnail_url: Optional[str] = None
     video_url: Optional[str] = None
+    thumbnail_url: Optional[str] = None
     release_date: Optional[_dt.datetime] = None
+    season_id: int
 
 class EpisodeCreate(_EpisodeBase):
     pass
 
 class Episode(_EpisodeBase):
-    id: int
-    
+    episode_id: int
     class Config:
         orm_mode = True
-
 
 #! MOVIE BASE
 class _MovieBase(_pydantic.BaseModel):
@@ -96,6 +96,7 @@ class _MovieBase(_pydantic.BaseModel):
     rating: Optional[int] = None
     description: Optional[str] = None
     cover_image: Optional[str] = None
+    video_url: Optional[str] = None
 
 class MovieCreate(_MovieBase):
     pass

@@ -87,21 +87,7 @@ async def update_lead(
     return {"message", "Successfully Updated"}
 
 
-#! Series Section
-
-@app.get("/api/series", response_model=List[_schemas.Series])
-async def get_series(
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_series(db=db)
-
-@app.get("/api/series/{series_id}", response_model=_schemas.Series)
-async def get_series_by_id(
-    series_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_series_by_id(db=db, series_id=series_id)
-
+#! TVSeries Section
 @app.post("/api/series", response_model=_schemas.Series)
 async def create_series(
     series: _schemas.SeriesCreate,
@@ -109,100 +95,118 @@ async def create_series(
 ):
     return await _services.create_series(db=db, series=series)
 
-@app.put("/api/series/{series_id}", response_model=_schemas.Series)
+@app.get("/api/series", response_model=List[_schemas.Series])
+async def get_series(
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_series(db=db)
+
+@app.get("/api/series/{series_id}", status_code=200)
+async def get_series_by_id(
+    series_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_series_by_id(series_id, db)
+
+@app.put("/api/series/{series_id}", status_code=200)
 async def update_series(
     series_id: int,
     series: _schemas.SeriesCreate,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.update_series(db=db, series_id=series_id, series=series)
+    await _services.update_series(series_id, series, db)
+    return {"message": "Successfully Updated"}
 
 @app.delete("/api/series/{series_id}", status_code=204)
 async def delete_series(
     series_id: int,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    await _services.delete_series(db=db, series_id=series_id)
-    return {"message", "Successfully Deleted"}
-
-#! Subseries = Season Section
-@app.get("/api/series/{series_id}/seasons/", response_model=List[_schemas.Season])
-async def get_seasons(
-    series_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_seasons(db=db, series_id=series_id)
-
-
-@app.post("/api/series/{series_id}/seasons/", response_model=_schemas.Season)
-async def create_season(
-    series_id: int, 
-    season: _schemas.SeasonCreate, 
-    db: _orm.Session = _fastapi.Depends(_services.get_db)):
-    return await _services.create_season(db=db, series_id=series_id, season=season)
-
-"""@app.delete("/api/series/{series_id}/seasons/{season_id}", status_code=204)
-async def delete_season(
-    series_id: int,
-    season_number: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db)
-):
-    await _services.delete_season(db=db, series_id=series_id, season_number=season_number)
-    return {"message": "Successfully Deleted"}"""
-
-
-#! Subseries = Episode Section
-@app.get("/api/series/seasons/{season_id}/episodes", response_model=List[_schemas.Episode])
-async def get_episodes(
-    season_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_episodes(db=db, season_id=season_id)
-
-
-@app.post("/api/series/seasons/{season_id}/episodes", response_model=_schemas.Episode)
-async def create_episode(
-    season_id: int,
-    episode: _schemas.EpisodeCreate,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.create_episode(db=db, season_id=season_id, episode=episode)
-
-@app.put("/api/series/{series_id}/seasons/{season_id}/episodes/{episode_id}", response_model=_schemas.Episode)
-async def update_episode(
-    series_id: int,
-    season_number: int,
-    episode_id: int,
-    episode: _schemas.EpisodeCreate,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.update_episode(db=db, series_id=series_id, season_number=season_number, episode_id=episode_id, episode=episode)
-
-@app.delete("/api/series/{series_id}/seasons/{season_id}/episode/{episode_id}", status_code=204)
-async def delete_episode(
-    series_id: int,
-    season_number: int,
-    episode_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    await _services.delete_episode(db=db, series_id=series_id, season_number=season_number, episode_id=episode_id)
+    await _services.delete_series(series_id, db)
     return {"message": "Successfully Deleted"}
 
 
+#* Season Section
+@app.post("/api/seasons", response_model=_schemas.Season)
+async def create_season(
+    season: _schemas.SeasonCreate,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.create_season(db=db, season=season)
+
+@app.get("/api/seasons", response_model=List[_schemas.Season])
+async def get_seasons(
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_seasons(db=db)
+
+@app.get("/api/seasons/{season_id}", status_code=200)
+async def get_season_by_id(
+    season_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_season_by_id(season_id, db)
+
+@app.put("/api/seasons/{season_id}", status_code=200)
+async def update_season(
+    season_id: int,
+    season: _schemas.SeasonCreate,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    await _services.update_season(season_id, season, db)
+    return {"message": "Successfully Updated"}
+
+@app.delete("/api/seasons/{season_id}", status_code=204)
+async def delete_season(
+    season_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    await _services.delete_season(season_id, db)
+    return {"message": "Successfully Deleted"}
+
+#? Episode Section
+@app.post("/api/episodes", response_model=_schemas.Episode)
+async def create_episode(
+    episode: _schemas.EpisodeCreate,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.create_episode(db=db, episode=episode)
+
+@app.get("/api/episodes", response_model=List[_schemas.Episode])
+async def get_episodes(
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_episodes(db=db)
+
+@app.get("/api/episodes/{episode_id}", status_code=200)
+async def get_episode_by_id(
+    episode_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_episode_by_id(episode_id, db)
+
+@app.put("/api/episodes/{episode_id}", status_code=200)
+async def update_episode(
+    episode_id: int,
+    episode: _schemas.EpisodeCreate,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    await _services.update_episode(episode_id, episode, db)
+    return {"message": "Successfully Updated"}
+
+@app.delete("/api/episodes/{episode_id}", status_code=204)
+async def delete_episode(
+    episode_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    await _services.delete_episode(episode_id, db)
+    return {"message": "Successfully Deleted"}
+
+
+ #TODO: ALL section at update function it might have some bugs BOOM! HELP ME!
+ 
+ 
 #! Movie Section
-@app.get("/api/movies", response_model=List[_schemas.Movie])
-async def get_movies(
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_movies(db=db)
-
-@app.get("/api/movies/{movie_id}", response_model=_schemas.Movie)
-async def get_movie_by_id(
-    movie_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_movie_by_id(db=db, movie_id=movie_id)
-
 @app.post("/api/movies", response_model=_schemas.Movie)
 async def create_movie(
     movie: _schemas.MovieCreate,
@@ -210,38 +214,38 @@ async def create_movie(
 ):
     return await _services.create_movie(db=db, movie=movie)
 
-@app.put("/api/movies/{movie_id}", response_model=_schemas.Movie)
+@app.get("/api/movies", response_model=List[_schemas.Movie])
+async def get_movies(
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_movies(db=db)
+
+@app.get("/api/movies/{movie_id}", status_code=200)
+async def get_movie_by_id(
+    movie_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_movie_by_id(movie_id, db)
+
+@app.put("/api/movies/{movie_id}", status_code=200)
 async def update_movie(
     movie_id: int,
     movie: _schemas.MovieCreate,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.update_movie(db=db, movie_id=movie_id, movie=movie)
+    await _services.update_movie(movie_id, movie, db)
+    return {"message": "Successfully Updated"}
 
-@app.delete("/api/movie/{movie_id}", status_code=204)
+@app.delete("/api/movies/{movie_id}", status_code=204)
 async def delete_movie(
     movie_id: int,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    await _services.delete_movie(db=db, movie_id=movie_id)
-    return {"message", "Successfully Deleted"}
+    await _services.delete_movie(movie_id, db)
+    return {"message": "Successfully Deleted"}
 
 
-"""
-#! Sub Movie = Genre Section
-@app.get("/api/genres", response_model=List[_schemas.Genre])
-async def get_genre(
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_genres(db=db)
-
-@app.get("/api/genres/{genre_id}", response_model=_schemas.Genre)
-async def get_genre_by_id(
-    genre_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_genre_by_id(db=db, genre_id=genre_id)
-
+#* Genre Section
 @app.post("/api/genres", response_model=_schemas.Genre)
 async def create_genre(
     genre: _schemas.GenreCreate,
@@ -249,61 +253,76 @@ async def create_genre(
 ):
     return await _services.create_genre(db=db, genre=genre)
 
-@app.put("/api/genres/{genre_id}", response_model=_schemas.Genre)
+@app.get("/api/genres", response_model=List[_schemas.Genre])
+async def get_genres(
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_genres(db=db)
+
+@app.get("/api/genres/{genre_id}", status_code=200)
+async def get_genre_by_id(
+    genre_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    return await _services.get_genre_by_id(genre_id, db)
+
+@app.put("/api/genres/{genre_id}", status_code=200)
 async def update_genre(
     genre_id: int,
     genre: _schemas.GenreCreate,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.update_genre(db=db, genre_id=genre_id, genre=genre)
+    await _services.update_genre(genre_id, genre, db)
+    return {"message": "Successfully Updated"}
 
-@app.delete("/api/genre/{genre_id}", status_code=204)
+@app.delete("/api/genres/{genre_id}", status_code=204)
 async def delete_genre(
     genre_id: int,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    await _services.delete_genre(db=db, genre_id=genre_id)
-    return {"message", "Successfully Deleted"}
+    await _services.delete_genre(genre_id, db)
+    return {"message": "Successfully Deleted"}
 
 
-
-#! SubMovie = MovieGenre Section
-@app.get("/api/moviegenres", response_model=List[_schemas.MovieGenre])
-async def get_moviegenres(
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_moviegenres(db=db)
-
-@app.get("/api/moviegenres/{moviegenre_id}", response_model=_schemas.MovieGenre)
-async def get_moviegenre_by_id(
-    moviegenre_id: int,
-    db: _orm.Session = _fastapi.Depends(_services.get_db),
-):
-    return await _services.get_moviegenre_by_id(db=db, moviegenre_id=moviegenre_id)
-
+#? Movie Genre Section
 @app.post("/api/moviegenres", response_model=_schemas.MovieGenre)
-async def create_moviegenre(
-    moviegenre: _schemas.MovieGenreCreate,
+async def create_movie_genre(
+    movie_genre: _schemas.MovieGenreCreate,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.create_moviegenre(db=db, moviegenre=moviegenre)
+    return await _services.create_movie_genre(db=db, movie_genre=movie_genre)
 
-@app.put("/api/moviegenres/{moviegenre_id}", response_model=_schemas.MovieGenre)
-async def update_moviegenre(
-    moviegenre_id: int,
-    moviegenre: _schemas.MovieGenreCreate,
+@app.get("/api/moviegenres", response_model=List[_schemas.MovieGenre])
+async def get_movie_genres(
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    return await _services.update_moviegenre(db=db, moviegenre_id=moviegenre_id, moviegenre=moviegenre)
+    return await _services.get_movie_genres(db=db)
 
-@app.delete("/api/moviegenre/{moviegenre_id}", status_code=204)
-async def delete_moviegenre(
-    moviegenre_id: int,
+@app.get("/api/moviegenres/{movie_genre_id}", status_code=200)
+async def get_movie_genre_by_id(
+    movie_genre_id: int,
     db: _orm.Session = _fastapi.Depends(_services.get_db),
 ):
-    await _services.delete_moviegenre(db=db, moviegenre_id=moviegenre_id)
-    return {"message", "Successfully Deleted"}"""
+    return await _services.get_movie_genre_by_id(movie_genre_id, db)
 
-@app.get("/api")
+@app.put("/api/moviegenres/{movie_genre_id}", status_code=200)
+async def update_movie_genre(
+    movie_genre_id: int,
+    movie_genre: _schemas.MovieGenreCreate,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    await _services.update_movie_genre(movie_genre_id, movie_genre, db)
+    return {"message": "Successfully Updated"}
+
+@app.delete("/api/moviegenres/{movie_genre_id}", status_code=204)
+async def delete_movie_genre(
+    movie_genre_id: int,
+    db: _orm.Session = _fastapi.Depends(_services.get_db),
+):
+    await _services.delete_movie_genre(movie_genre_id, db)
+    return {"message": "Successfully Deleted"}
+
+
+app.get("/api")
 async def root():
     return {"message": "Awesome Netflix"}
