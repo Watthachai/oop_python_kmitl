@@ -5,7 +5,7 @@ import Login from "./components/Login";
 import Header from "./components/Header";
 import { UserContext } from "./context/UserContext";
 import Table from "./components/Table";
-import Movie from "./components/Movie/Movie";
+import Movie from "./components/Movie";
 
 const App = () => {
   const [message, setMessage] = useState("");
