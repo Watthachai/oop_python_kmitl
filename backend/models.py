@@ -37,38 +37,38 @@ class Lead(_database.Base):
 
 class Series(_database.Base):
     __tablename__ = "series"
-    
-    series_id = _sql.Column(_sql.Integer, primary_key=True, index=True)
+
+    series_id = _sql.Column(_sql.Integer, primary_key=True, index=True) #**!
     title = _sql.Column(_sql.String, index=True)
     description = _sql.Column(_sql.String, index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
     cover_image = _sql.Column(_sql.String, index=True)
-    
-    seasons = _orm.relationship("Season", back_populates="series", lazy="dynamic")
+
+    seasons = _orm.relationship("Season", back_populates="series")
 
 class Season(_database.Base):
-    __tablename__ = "season"
-    season_id = _sql.Column(_sql.Integer, primary_key=True, index=True)
-    series_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"), index=True)
-    season_number = _sql.Column(_sql.String, index=True)
+    __tablename__ = "seasons"
+
+    season_id = _sql.Column(_sql.Integer, primary_key=True, index=True) #**!
+    title = _sql.Column(_sql.String, index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
-    
-    series = _orm.relationship("Series", back_populates="seasons")
+    series_id = _sql.Column(_sql.Integer, _sql.ForeignKey("series.series_id"), index=True)
+
     episodes = _orm.relationship("Episode", back_populates="season")
 
+    series = _orm.relationship("Series", back_populates="seasons")
 
 class Episode(_database.Base):
     __tablename__ = "episodes"
-    episode_id = _sql.Column(_sql.Integer, primary_key=True,index=True)
-    season_id = _sql.Column(_sql.Integer, _sql.ForeignKey("season.season_id"), index=True)
-    episode_number = _sql.Column(_sql.String,index=True)
+
+    episode_id = _sql.Column(_sql.Integer, primary_key=True,index=True) #**!
     title = _sql.Column(_sql.String,index=True)
     description = _sql.Column(_sql.String,index=True)
     video_url = _sql.Column(_sql.String,index=True)
     thumbnail_url = _sql.Column(_sql.String,index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
-    
-    
+    season_id = _sql.Column(_sql.Integer, _sql.ForeignKey("seasons.season_id"), index=True)
+
     season = _orm.relationship("Season", back_populates="episodes")
     
     
@@ -77,13 +77,14 @@ class Episode(_database.Base):
 
 class Movie(_database.Base):
     __tablename__ = "movies"
-    movie_id = _sql.Column(_sql.Integer,primary_key=True,index=True)
+    movie_id = _sql.Column(_sql.Integer,primary_key=True,index=True) #**!
     title = _sql.Column(_sql.String,index=True)
     release_date = _sql.Column(_sql.DateTime, default=_dt.datetime.utcnow)
     duration = _sql.Column(_sql.String,index=True)
     rating = _sql.Column(_sql.String,index=True)
     description = _sql.Column(_sql.String,index=True)
     cover_image = _sql.Column(_sql.String,index=True)
+    video_url = _sql.Column(_sql.String,index=True)
     
 class Genre(_database.Base):
     __tablename__ = "genres"
