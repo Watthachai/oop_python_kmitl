@@ -39,7 +39,10 @@ const Register = () => {
   };
 
   return (
-    <div className="column">
+    <>
+    
+    </>
+/*<div className="column">
       <form className="box" onSubmit={handleSubmit}>
         <h1 className="title has-text-centered">Register</h1>
         <div className="field">
@@ -88,6 +91,7 @@ const Register = () => {
         </button>
       </form>
     </div>
+    */
   );
 };
 

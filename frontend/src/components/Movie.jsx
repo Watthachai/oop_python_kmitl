@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ErrorMessage from "../_backup/components/ErrorMessage";
 import moment from "moment";
+import { UserContext } from "../context/UserContext";
 
 const Movie = () => {
+    const [token, setToken] = useContext(UserContext);
     const [movie, setMovie] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -27,8 +29,12 @@ const Movie = () => {
             setMovie(data);
             setLoaded(true);
         }
+        
     };
 
+    const handleLogout = () => {
+        setToken(null);
+      };
     return (
         <>  
             <body>
@@ -49,7 +55,11 @@ const Movie = () => {
                     <nav className="sub-nav">
                         <a href="#"><i className="fas fa-search sub-nav-logo"></i></a>
                         <a href="#"><i className="fas fa-bell sub-nav-logo"></i></a>
-                        <a href="#">Account</a>        
+                        {token && (
+                            <button className="button" onClick={handleLogout}>
+                            Logout
+                            </button>
+                        )}        
                     </nav>      
                     </header>
                     {/* <!-- END OF HEADER --> */}
@@ -79,14 +89,7 @@ const Movie = () => {
                             {loaded && movie.map((movie) => (
                                 <a href="#"><img src={movie.cover_image} alt=""/></a>
                             ))}
-                            </div>
-
-                        <div className="box">
-                            {loaded && movie.map((movie) => (
-                                <a href="#"><img src={movie.cover_image} alt=""/></a>
-                            ))}
-                        </div>
-                    
+                            </div>                
 
                         <h1 id="movies">Blockbuster Action & Adventure</h1>
                         <div className="box">
