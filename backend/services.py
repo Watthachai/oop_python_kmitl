@@ -148,7 +148,7 @@ async def get_series(db: _orm.Session):
 
 
 async def get_series_by_id(series_id: int, db: _orm.Session):
-    series = db.query(_models.Series).filter(_models.Series.id == series_id).first()
+    series = db.query(_models.Series).filter(_models.Series.series_id == series_id).first()
 
     if series is None:
         raise _fastapi.HTTPException(status_code=404, detail="Series does not exist")
@@ -157,7 +157,7 @@ async def get_series_by_id(series_id: int, db: _orm.Session):
 
 
 async def delete_series(series_id: int, db: _orm.Session):
-    series = db.query(_models.Series).filter(_models.Series.id == series_id).first()
+    series = db.query(_models.Series).filter(_models.Series.series_id == series_id).first()
 
     if series is None:
         raise _fastapi.HTTPException(status_code=404, detail="Series does not exist")
@@ -167,16 +167,15 @@ async def delete_series(series_id: int, db: _orm.Session):
     
     
 async def update_series(series_id: int, series: _schemas.SeriesCreate, db: _orm.Session):
-    series_db = db.query(_models.Series).filter(_models.Series.id == series_id).first()
+    series_db = db.query(_models.Series).filter(_models.Series.series_id == series_id).first()
 
     if series_db is None:
         raise _fastapi.HTTPException(status_code=404, detail="Series does not exist")
 
     series_db.title = series.title
     series_db.description = series.description
-    series_db.seasons = series.seasons #! TODO: มาแก้ตรงนี้หน่อยนะจ๊ะ    
-    series_db.episodes = series.episodes
-    series_db.date_last_updated = _dt.datetime.utcnow()
+    series_db.release_date = series.release_date
+    series_db.cover_image = series.cover_image
 
     db.commit()
     db.refresh(series_db)
@@ -200,7 +199,7 @@ async def get_seasons(db: _orm.Session):
 
 
 async def get_season_by_id(season_id: int, db: _orm.Session):
-    season = db.query(_models.Season).filter(_models.Season.id == season_id).first()
+    season = db.query(_models.Season).filter(_models.Season.season_id == season_id).first()
 
     if season is None:
         raise _fastapi.HTTPException(status_code=404, detail="Season does not exist")
@@ -209,7 +208,7 @@ async def get_season_by_id(season_id: int, db: _orm.Session):
 
 
 async def delete_season(season_id: int, db: _orm.Session):
-    season = db.query(_models.Season).filter(_models.Season.id == season_id).first()
+    season = db.query(_models.Season).filter(_models.Season.season_id == season_id).first()
 
     if season is None:
         raise _fastapi.HTTPException(status_code=404, detail="Season does not exist")
@@ -219,15 +218,14 @@ async def delete_season(season_id: int, db: _orm.Session):
     
     
 async def update_season(season_id: int, season: _schemas.SeasonCreate, db: _orm.Session):
-    season_db = db.query(_models.Season).filter(_models.Season.id == season_id).first()
+    season_db = db.query(_models.Season).filter(_models.Season.season_id == season_id).first()
 
     if season_db is None:
         raise _fastapi.HTTPException(status_code=404, detail="Season does not exist")
 
     season_db.title = season.title
-    season_db.description = season.description
-    season_db.episodes = season.episodes
-    season_db.date_last_updated = _dt.datetime.utcnow()
+    season_db.release_date = season.release_date
+    season_db.series_id = season.series_id
 
     db.commit()
     db.refresh(season_db)
@@ -251,7 +249,7 @@ async def get_episodes(db: _orm.Session):
 
 
 async def get_episode_by_id(episode_id: int, db: _orm.Session):
-    episode = db.query(_models.Episode).filter(_models.Episode.id == episode_id).first()
+    episode = db.query(_models.Episode).filter(_models.Episode.episode_id == episode_id).first()
 
     if episode is None:
         raise _fastapi.HTTPException(status_code=404, detail="Episode does not exist")
@@ -260,7 +258,7 @@ async def get_episode_by_id(episode_id: int, db: _orm.Session):
 
 
 async def delete_episode(episode_id: int, db: _orm.Session):
-    episode = db.query(_models.Episode).filter(_models.Episode.id == episode_id).first()
+    episode = db.query(_models.Episode).filter(_models.Episode.episode_id == episode_id).first()
 
     if episode is None:
         raise _fastapi.HTTPException(status_code=404, detail="Episode does not exist")
@@ -270,14 +268,17 @@ async def delete_episode(episode_id: int, db: _orm.Session):
     
 
 async def update_episode(episode_id: int, episode: _schemas.EpisodeCreate, db: _orm.Session):
-    episode_db = db.query(_models.Episode).filter(_models.Episode.id == episode_id).first()
+    episode_db = db.query(_models.Episode).filter(_models.Episode.episode_id == episode_id).first()
 
     if episode_db is None:
         raise _fastapi.HTTPException(status_code=404, detail="Episode does not exist")
 
     episode_db.title = episode.title
     episode_db.description = episode.description
-    episode_db.date_last_updated = _dt.datetime.utcnow()
+    dpisode_db.video_url = episode.video_url
+    episode_db.thumbnail_url = episode.thumbnail_url
+    episode_date.release_date = episode.release_date
+    episode_db.season_id = episode.season_id
 
     db.commit()
     db.refresh(episode_db)
@@ -299,7 +300,7 @@ async def get_movies(db: _orm.Session):
     return list(map(_schemas.Movie.from_orm, movies))
 
 async def get_movie_by_id(movie_id: int, db: _orm.Session):
-    movie = db.query(_models.Movie).filter(_models.Movie.id == movie_id).first()
+    movie = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
 
     if movie is None:
         raise _fastapi.HTTPException(status_code=404, detail="Movie does not exist")
@@ -307,7 +308,7 @@ async def get_movie_by_id(movie_id: int, db: _orm.Session):
     return _schemas.Movie.from_orm(movie)
 
 async def delete_movie(movie_id: int, db: _orm.Session):
-    movie = db.query(_models.Movie).filter(_models.Movie.id == movie_id).first()
+    movie = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
 
     if movie is None:
         raise _fastapi.HTTPException(status_code=404, detail="Movie does not exist")
@@ -316,7 +317,7 @@ async def delete_movie(movie_id: int, db: _orm.Session):
     db.commit()
     
 async def update_movie(movie_id: int, movie: _schemas.MovieCreate, db: _orm.Session):
-    movie_db = db.query(_models.Movie).filter(_models.Movie.id == movie_id).first()
+    movie_db = db.query(_models.Movie).filter(_models.Movie.movie_id == movie_id).first()
 
     if movie_db is None:
         raise _fastapi.HTTPException(status_code=404, detail="Movie does not exist")
@@ -346,7 +347,7 @@ async def get_genres(db: _orm.Session):
     return list(map(_schemas.Genre.from_orm, genres))
 
 async def get_genre_by_id(genre_id: int, db: _orm.Session):
-    genre = db.query(_models.Genre).filter(_models.Genre.id == genre_id).first()
+    genre = db.query(_models.Genre).filter(_models.Genre.genre_id == genre_id).first()
 
     if genre is None:
         raise _fastapi.HTTPException(status_code=404, detail="Genre does not exist")
@@ -354,7 +355,7 @@ async def get_genre_by_id(genre_id: int, db: _orm.Session):
     return _schemas.Genre.from_orm(genre)
 
 async def delete_genre(genre_id: int, db: _orm.Session):
-    genre = db.query(_models.Genre).filter(_models.Genre.id == genre_id).first()
+    genre = db.query(_models.Genre).filter(_models.Genre.genre_id == genre_id).first()
 
     if genre is None:
         raise _fastapi.HTTPException(status_code=404, detail="Genre does not exist")
@@ -363,7 +364,7 @@ async def delete_genre(genre_id: int, db: _orm.Session):
     db.commit()
     
 async def update_genre(genre_id: int, genre: _schemas.GenreCreate, db: _orm.Session):
-    genre_db = db.query(_models.Genre).filter(_models.Genre.id == genre_id).first()
+    genre_db = db.query(_models.Genre).filter(_models.Genre.genre_id == genre_id).first()
 
     if genre_db is None:
         raise _fastapi.HTTPException(status_code=404, detail="Genre does not exist")
@@ -398,7 +399,7 @@ async def get_movie_genres(db: _orm.Session):
     return list(map(_schemas.MovieGenre.from_orm, movie_genres))
 
 async def get_movie_genre_by_id(movie_genre_id: int, db: _orm.Session):
-    movie_genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.id == movie_genre_id).first()
+    movie_genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_genre_id == movie_genre_id).first()
 
     if movie_genre is None:
         raise _fastapi.HTTPException(status_code=404, detail="Movie Genre does not exist")
@@ -406,7 +407,7 @@ async def get_movie_genre_by_id(movie_genre_id: int, db: _orm.Session):
     return _schemas.MovieGenre.from_orm(movie_genre)
 
 async def delete_movie_genre(movie_genre_id: int, db: _orm.Session):
-    movie_genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.id == movie_genre_id).first()
+    movie_genre = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_genre_id == movie_genre_id).first()
 
     if movie_genre is None:
         raise _fastapi.HTTPException(status_code=404, detail="Movie Genre does not exist")
@@ -415,7 +416,7 @@ async def delete_movie_genre(movie_genre_id: int, db: _orm.Session):
     db.commit()
     
 async def update_movie_genre(movie_genre_id: int, movie_genre: _schemas.MovieGenreCreate, db: _orm.Session):
-    movie_genre_db = db.query(_models.MovieGenre).filter(_models.MovieGenre.id == movie_genre_id).first()
+    movie_genre_db = db.query(_models.MovieGenre).filter(_models.MovieGenre.movie_genre_id == movie_genre_id).first()
 
     if movie_genre_db is None:
         raise _fastapi.HTTPException(status_code=404, detail="Movie Genre does not exist")
