@@ -4,7 +4,7 @@
     --light: #F3F3F3;
     --dark: 	#686868;
   }
-  
+
   body {
     width: 100vw;
     min-height: 100vh;
@@ -16,7 +16,10 @@
     box-sizing: border-box;
     line-height: 1.4;
   }
-  
+  ul {
+    list-style: none;
+  }
+
   img {
     max-width: 100%;
   }
