@@ -323,7 +323,6 @@ async def delete_movie_genre(
     return {"message": "Successfully Deleted"}
 
 
-
-"""@app.get("/api")
+app.get("/api")
 async def root():
-    return {"message": "Awesome Netflix"}"""
+    return {"message": "Awesome Netflix"}

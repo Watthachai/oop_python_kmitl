@@ -80,7 +80,7 @@ const Table = () => {
             </button>
                 <ErrorMessage message={errorMessage} />
                 {loaded && leads ? (
-                        <table className="table is-fullwidth">
+                        <table className="table">
                             <thead>
                                 <tr>
                                     <th>First Name</th>
