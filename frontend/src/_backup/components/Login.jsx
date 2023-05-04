@@ -89,7 +89,7 @@ const Login = () => {
             </div>
             <div className="signup">
                 <p>New to Netflix ?</p>
-
+                <br></br>
                 <button onClick={<Register />}>Sign up now!</button>
             </div>
             <div className="more">
