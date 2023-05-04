@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "../_backup/components/ErrorMessage";
 import moment from "moment";
 
 const Movie = () => {
