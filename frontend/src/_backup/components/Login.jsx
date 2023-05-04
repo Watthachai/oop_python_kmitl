@@ -1,11 +1,9 @@
 import React, { useState, useContext } from "react";
-import ReactDOM from 'react-dom';
-import Register from "./Register";
+
 import ErrorMessage from "./ErrorMessage";
 import { UserContext } from "../context/UserContext";
-import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
-
+import Register from "./Register";
+import Movie from "./Movie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,38 +11,31 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [, setToken] = useContext(UserContext);
 
-  const history = useHistory();
-
   const submitLogin = async () => {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: JSON.stringify(
-        `grant_type=&username=${email}&password=${password}&scope=&client_id=&client_secret=`
-      ),
+      body: JSON.stringify(`
+                grant_type=&username=${email}&password=${password}&scope=&client_id=&client_secret=`),
     };
 
     const response = await fetch("/api/token", requestOptions);
     const data = await response.json();
 
     if (!response.ok) {
-      setErrorMessage(data.detail);
-    } else {
-      setToken(data.access_token);
+        setErrorMessage(data.detail);
+        } else {
+        setToken(data.access_token);
+        }
+    };
 
-      
-    }
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await submitLogin();
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    submitLogin();
-
-  };
-
-  return (
-
-    <>
+    return (
+        <>
         <header className="showcase">
             <div className="logo">
             <img src="https://i.ibb.co/r5krrdz/logo.png"></img>
@@ -71,8 +62,8 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     />
-                    <ErrorMessage message={errorMessage} />
                 </div>
+                <errorMessage message={errorMessage} />
                 <div className="btn">
                     <button
                     className="btn-primary"
@@ -81,6 +72,7 @@ const Login = () => {
                     >
                     Sign In
                     </button>
+        
 
                 </div>
                 <div className="help" style={{ marginTop: 20 }}>
@@ -97,11 +89,8 @@ const Login = () => {
             </div>
             <div className="signup">
                 <p>New to Netflix ?</p>
-
-                <Link to="/register">
-                  <button>Sign up now!</button>
-                </Link>
-
+                <br></br>
+                <button onClick={<Register />}>Sign up now!</button>
             </div>
             <div className="more">
                 <p>
@@ -110,10 +99,28 @@ const Login = () => {
                 </p>
             </div>
             </div>
-            
+            <footer>
+            <div className="ftr-content">
+                <div className="contact">
+                <a href="#">Quesions? Contact us.</a>
+                </div>
+                <div className="ftr">
+                <a href="#">Gift Card Terms</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Statement</a>
+                </div>
+                <div className="select">
+                <select>
+                    <option style={{ color: "white" }}>English</option>
+                    <option style={{ color: "white" }}>Thai</option>
+                    <option style={{ color: "white" }}>Français</option>
+                </select>
+                </div>
+            </div>
+            </footer>
         </header>
-      </>
-  );
+        </>
+    );
 };
 
 export default Login;

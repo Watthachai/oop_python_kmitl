@@ -185,7 +185,7 @@ p {
 	width: 450px;
 	height: 650px;
 	background: rgb(0, 0, 0, 0.65);
-	margin: 10% auto;
+	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;

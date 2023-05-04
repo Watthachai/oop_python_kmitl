@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
 
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Header from "./components/Header";
-import Table from "./components/Table";
 import { UserContext } from "./context/UserContext";
+import Table from "./components/Table";
 import Movie from "./components/Movie";
 
 const App = () => {
   const [message, setMessage] = useState("");
-  const [token] = useContext(UserContext);
+  const [token] = React.useContext(UserContext);
 
   const getWelcomeMessage = async () => {
     const requestOptions = {
@@ -22,8 +21,8 @@ const App = () => {
     const response = await fetch("/api", requestOptions);
     const data = await response.json();
 
-    if (!response.ok) {
-      console.log("something messed up");
+    if(!response.ok) {
+      console.log("มีบางอย่างผิดพลาด ชัวรๆ์")
     } else {
       setMessage(data.message);
     }
@@ -34,22 +33,19 @@ const App = () => {
   }, []);
 
   return (
-    <Router>
-      <Switch>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/">
-          {!token ? (
-            <div className="columns">
-              <Login />
-            </div>
-          ) : (
-            <Movie />
-          )}
-        </Route>
-      </Switch>
-    </Router>
+    <>
+    { !token ? (
+      <Login />
+      
+    ) : (
+      <>
+      
+      <Movie/>
+      
+      </>
+    )}
+      
+    </>
   );
 };
 

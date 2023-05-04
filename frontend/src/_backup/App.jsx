@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Register from "./components/Register";
-import Login from "./components/Login";
-import Header from "./components/Header";
-import Table from "./components/Table";
+import LandingPage from './components/LandingPage';
+import Register from './components/Register';
+import Login from './components/Login';
+import Movie from './components/Movie';
 import { UserContext } from "./context/UserContext";
-import Movie from "./components/Movie";
+
 
 const App = () => {
   const [message, setMessage] = useState("");
@@ -33,24 +33,22 @@ const App = () => {
     getWelcomeMessage();
   }, []);
 
+
   return (
     <Router>
       <Switch>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/">
-          {!token ? (
-            <div className="columns">
-              <Login />
-            </div>
-          ) : (
-            <Movie />
-          )}
-        </Route>
+        <Route exact path="/" component={LandingPage} />
+        <Route path="/register" component={Register} />
+
+        <Route exact path="/" component={LandingPage} />
+        <Route path="/login" component={Login} />
+
+        <Route exact path="/" component={Register} />
+        <Route path="/Movie" component={Movie} />
       </Switch>
+
     </Router>
   );
-};
+}
 
 export default App;

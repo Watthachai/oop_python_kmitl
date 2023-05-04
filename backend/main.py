@@ -322,7 +322,3 @@ async def delete_movie_genre(
     await _services.delete_movie_genre(movie_genre_id, db)
     return {"message": "Successfully Deleted"}
 
-
-app.get("/api")
-async def root():
-    return {"message": "Awesome Netflix"}
