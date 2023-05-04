@@ -34,7 +34,7 @@ const App = () => {
 
   return (
     <>
-      <Movie />
+      <Login />
     </>
   );
 };

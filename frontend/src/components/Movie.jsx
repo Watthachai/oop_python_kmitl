@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ErrorMessage from "./ErrorMessage";
-
+import moment from "moment";
 
 const Movie = () => {
     const [movie, setMovie] = useState([]);
@@ -32,7 +32,6 @@ const Movie = () => {
     return (
         <>  
             <body>
-           
                 <div className="wrapper">
                     {/* <!-- HEADER --> */}
                     <header>
@@ -54,75 +53,53 @@ const Movie = () => {
                     </nav>      
                     </header>
                     {/* <!-- END OF HEADER --> */}
-                    
+
                     {/* <!-- MAIN CONTAINER --> */}
                     <section className="main-container" >
                         <div className="location" id="home">
                             <h1 id="home">Popular on Netflix</h1>
                             <div className="box">
-                                <a href=""><img src="{movie.cover_image}" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p2.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p3.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p4.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p5.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p6.PNG?raw=true" alt=""/></a>
-                        
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p7.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p8.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p9.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p10.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p11.PNG?raw=true" alt=""/></a>
-                                <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/p12.PNG?raw=true" alt=""/></a>        
+                            {loaded && movie.map((movie) => (
+                                <a href="#"><img src={movie.cover_image} alt=""/></a>
+                            ))}
                             </div>
+
                         </div>
                     
 
                         <h1 id="myList">Trending Now</h1>
                         <div className="box">
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/t1.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/t2.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/t3.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/t4.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/t5.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/t6.PNG?raw=true" alt=""/></a>                  
-                        </div>
+                            {loaded && movie.map((movie) => (
+                                <a href="#"><img src={movie.cover_image} alt=""/></a>
+                            ))}
+                            </div>
                     
                         <h1 id="tvShows">TV Shows</h1>
                         <div className="box">
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv1.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv2.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv3.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv4.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv5.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv6.PNG?raw=true" alt=""/></a>
+                            {loaded && movie.map((movie) => (
+                                <a href="#"><img src={movie.cover_image} alt=""/></a>
+                            ))}
+                            </div>
 
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv7.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv8.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv9.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv10.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv11.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/tv12.PNG?raw=true" alt=""/></a>              
+                        <div className="box">
+                            {loaded && movie.map((movie) => (
+                                <a href="#"><img src={movie.cover_image} alt=""/></a>
+                            ))}
                         </div>
                     
 
                         <h1 id="movies">Blockbuster Action & Adventure</h1>
                         <div className="box">
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/m1.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/m2.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/m3.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/m4.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/m5.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/m6.PNG?raw=true" alt=""/></a>                
+                                {loaded && movie.map((movie) => (
+                                    <a href="#"><img src={movie.cover_image} alt=""/></a>
+                                ))}
                         </div>
 
                         <h1 id="originals">Netflix Originals</h1>
                         <div className="box">
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/o1.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/o2.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/o3.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/o4.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/o5.PNG?raw=true" alt=""/></a>
-                            <a href=""><img src="https://github.com/carlosavilae/Netflix-Clone/blob/master/img/o6.PNG?raw=true" alt=""/></a>                
+                                {loaded && movie.map((movie) => (
+                                    <a href="#"><img src={movie.cover_image} alt=""/></a>
+                                ))}
                         </div>
                         </section>
                         {/* <!-- END OF MAIN CONTAINER --> */}
@@ -152,35 +129,8 @@ const Movie = () => {
                                 </ul>
                             </div>
                         </section>
-                    </div>
-                
-                <ErrorMessage message={errorMessage} />
-                <table className="table is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>title</th>
-                            <th>release_date</th>
-                            <th>duration</th>
-                            <th>rating</th>
-                            <th>description</th>
-                            <th>cover_image</th>
-                            <th>video_url</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loaded && movie.map((movie) => (
-                            <tr key={movie.movie_id}>
-                                <td>{movie.title}</td>
-                                <td>{movie.release_date}</td>
-                                <td>{movie.duration}</td>
-                                <td>{movie.rating}</td>
-                                <td>{movie.description}</td>
-                                <td><img src={movie.cover_image} alt={movie.title}/></td>
-                                <td>{movie.video_url}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+
+                </div>
             </body>
         </>
     );
