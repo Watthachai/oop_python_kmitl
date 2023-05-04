@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -33,10 +34,12 @@ const App = () => {
   }, []);
 
   return (
-    <>
-      <div className="columns">
-        <div className="column"></div>
-        <div className="column m-5 is-two-thirds">
+    <Router>
+      <Switch>
+        <Route path="/register">
+          <Register />
+        </Route>
+        <Route path="/">
           {!token ? (
             <div className="columns">
               <Login />
@@ -44,10 +47,9 @@ const App = () => {
           ) : (
             <Movie />
           )}
-        </div>
-        <div className="column"></div>
-      </div>
-    </>
+        </Route>
+      </Switch>
+    </Router>
   );
 };
 

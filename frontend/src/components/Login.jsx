@@ -1,14 +1,19 @@
 import React, { useState, useContext } from "react";
-
+import ReactDOM from 'react-dom';
 import Register from "./Register";
 import ErrorMessage from "./ErrorMessage";
 import { UserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [, setToken] = useContext(UserContext);
+
+  const history = useHistory();
 
   const submitLogin = async () => {
     const requestOptions = {
@@ -26,12 +31,15 @@ const Login = () => {
       setErrorMessage(data.detail);
     } else {
       setToken(data.access_token);
+
+      
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     submitLogin();
+
   };
 
   return (
@@ -63,8 +71,8 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     />
+                    <ErrorMessage message={errorMessage} />
                 </div>
-                <errorMessage message={errorMessage} />
                 <div className="btn">
                     <button
                     className="btn-primary"
@@ -73,7 +81,6 @@ const Login = () => {
                     >
                     Sign In
                     </button>
-        
 
                 </div>
                 <div className="help" style={{ marginTop: 20 }}>
@@ -91,7 +98,10 @@ const Login = () => {
             <div className="signup">
                 <p>New to Netflix ?</p>
 
-                <button onClick={<Register />}>Sign up now!</button>
+                <Link to="/register">
+                  <button>Sign up now!</button>
+                </Link>
+
             </div>
             <div className="more">
                 <p>
@@ -100,63 +110,9 @@ const Login = () => {
                 </p>
             </div>
             </div>
-            <footer>
-            <div className="ftr-content">
-                <div className="contact">
-                <a href="#">Quesions? Contact us.</a>
-                </div>
-                <div className="ftr">
-                <a href="#">Gift Card Terms</a>
-                <a href="#">Terms of Use</a>
-                <a href="#">Privacy Statement</a>
-                </div>
-                <div className="select">
-                <select>
-                    <option style={{ color: "white" }}>English</option>
-                    <option style={{ color: "white" }}>Thai</option>
-                    <option style={{ color: "white" }}>Français</option>
-                </select>
-                </div>
-            </div>
-            </footer>
+            
         </header>
-        </>
-  /*<div className="column">
-      <form className="box" onSubmit={handleSubmit}>
-        <h1 className="title has-text-centered">Login</h1>
-        <div className="field">
-          <label className="label">Email Address</label>
-          <div className="control">
-            <input
-              type="email"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input"
-              required
-            />
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Password</label>
-          <div className="control">
-            <input
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input"
-              required
-            />
-          </div>
-        </div>
-        <ErrorMessage message={errorMessage} />
-        <br />
-        <button className="button is-primary" type="submit">
-          Login
-        </button>
-      </form>
-    </div>*/
+      </>
   );
 };
 
