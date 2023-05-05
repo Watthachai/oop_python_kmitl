@@ -5,11 +5,12 @@ import ErrorMessage from "./ErrorMessage";
 import SeriesModal from "./SeriesModal";
 import SeasonsModal from "./SeasonsModal";
 import MoviesModal from "./MoviesModal";
-
+import MovieGenreModal from "./MovieGenreModal";
 
 
 import { UserContext } from "../context/UserContext";
 import EpisodesModal from "./EpisodesModal";
+import GenreModal from "./GenreModal";
 
 const Table = () => {
     //const [token] = UserContext(UserContext);
@@ -232,11 +233,129 @@ const Table = () => {
     };
 
 
+
+    //!GENRE SECTION!!!!
+    const [genres, setGenres] = useState(null);
+    const [genre_id, setGenreId] = useState(null);
+    const [loadedGenre, setLoadedGenre] = useState(false);
+    const [activeModalGenre, setActiveModalGenre] = useState(false);
+
+    const genreHandleCreate = () => {
+        setGenreId(null);
+        setActiveModalGenre(true);
+    };
+
+
+    const genreHandleUpdate = async (genre_id) => {
+        setGenreId(genre_id);
+        setActiveModalGenre(true);
+    };
+
+    const genreHandleDelete = async (genre_id) => {
+        const requestOptions = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const response = await fetch(`/api/genres/${genre_id}`, requestOptions);
+        if (!response.ok) {
+            setErrorMessage("Failed to delete genre");
+        }
+
+        getGenre();
+    };
+
+    const getGenre = async () => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const response = await fetch("/api/genres", requestOptions);
+        if (!response.ok) {
+            setErrorMessage("Something went wrong. Couldn't load the genres");
+        } else {
+            const data = await response.json();
+            setGenres(data);
+            setLoadedGenre(true);
+        }
+    };
+
+    const handleModalGenre = () => {
+        setActiveModalGenre(!activeModalGenre);
+        getGenre();
+    };
+
+
+    //!MovieGenre SECTION!!!!
+    const [movieGenres, setMovieGenres] = useState(null);
+    const [movieGenre_id, setMovieGenreId] = useState(null);
+    const [loadedMovieGenre, setLoadedMovieGenre] = useState(false);
+    const [activeModalMovieGenre, setActiveModalMovieGenre] = useState(false);
+
+    const movieGenreHandleCreate = () => {
+        setMovieGenreId(null);
+        setActiveModalMovieGenre(true);
+    };
+
+
+    const movieGenreHandleUpdate = async (movieGenre_id) => {
+        setMovieGenreId(movieGenre_id);
+        setActiveModalMovieGenre(true);
+
+    };
+
+    
+    const movieGenreHandleDelete = async (movieGenre_id) => {
+        const requestOptions = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        
+        const response = await fetch(`/api/moviegenres/${movieGenre_id}`, requestOptions);
+        if (!response.ok) {
+            setErrorMessage("Failed to delete movieGenre");
+        }
+        
+        getMovieGenre();
+    };
+
+    const getMovieGenre = async () => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        const response = await fetch("/api/moviegenres", requestOptions);
+        if (!response.ok) {
+
+            setErrorMessage("Something went wrong. Couldn't load the movieGenres");
+        } else {
+            const data = await response.json();
+            setMovieGenres(data);
+            setLoadedMovieGenre(true);
+        }
+    };
+
+    const handleModalMovieGenre = () => {
+        setActiveModalMovieGenre(!activeModalMovieGenre);
+        getMovieGenre();
+    };
+
+
     useEffect(() => {
         getSeries();
         getSeasons();
         getEpisodes();
         getMovies();
+        getGenre();
+        getMovieGenre();
 
     }, []);
 
@@ -270,6 +389,20 @@ const Table = () => {
                 active={activeModalMovie}
                 handleModal={handleModalMovie}
                 movie_id={movie_id}
+                setErrorMessage={setErrorMessage}
+            />
+
+            <GenreModal
+                active={activeModalGenre}
+                handleModal={handleModalGenre}
+                genre_id={genre_id}
+                setErrorMessage={setErrorMessage}
+            />
+
+            <MovieGenreModal
+                active={activeModalMovieGenre}
+                handleModal={handleModalMovieGenre}
+                movieGenre_id={movieGenre_id}
                 setErrorMessage={setErrorMessage}
             />
 
@@ -517,6 +650,112 @@ const Table = () => {
         ) : (
             <p>Loading...</p>
         )}
+
+        //!! GENRE SECTION
+        
+        <div className="columns is-mobile is-centered">
+            <div className="column">
+                <p className="bd-notification is-primary">
+                    <h1 style={{paddingLeft:20, fontWeight:"bolder", fontSize:40}}>Genre Table</h1>
+                </p>
+            </div>
+            </div>
+
+            <button
+                className="button is-fullwidth is-success is-focused"
+                onClick={() => genreHandleCreate()}
+            >
+                Create Genre
+            </button>
+            <ErrorMessage message={errorMessage} />
+            {loadedGenre && genres ? (
+                <table className="table is-fullwidth is-hoverable">
+                    <thead>
+                        <tr><th>GenreID</th>
+                            <th>Genre Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {genres.map((genres) => (
+                            <tr key={genres.genre_id}>
+                                <td>{genres.genre_id}</td>
+                                <td>{genres.genre_name}</td>
+                                <td>
+                                    <button
+                                        className="button is-primary is-small mr-2"
+                                        onClick={() => genreHandleUpdate(genres.genre_id)}
+                                        >
+                                        Update
+                                    </button>
+                                    <button
+                                        className="button is-danger is-small"
+                                        onClick={() => genreHandleDelete(genres.genre_id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>Loading...</p>
+            )}
+
+            //? MOVIE GENRE SECTION!!!!!
+
+            <div className="columns is-mobile is-centered">
+            <div className="column">
+                <p className="bd-notification is-primary">
+                    <h1 style={{paddingLeft:20, fontWeight:"bolder", fontSize:40}}>Movie Genre Table</h1>
+                </p>
+            </div>
+            </div>
+
+            <button
+                className="button is-fullwidth is-success is-focused"
+                onClick={() => movieGenreHandleCreate()}
+            >
+                Create Movie Genre
+            </button>
+            <ErrorMessage message={errorMessage} />
+            {loadedMovieGenre && movieGenres ? (
+                <table className="table is-fullwidth is-hoverable">
+                    <thead>
+                        <tr><th>MovieGenreID</th>
+                            <th>Movie ID</th>
+                            <th>Genre ID</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {movieGenres.map((movieGenres) => (
+                            <tr key={movieGenres.movie_genre_id}>
+                                <td>{movieGenres.movie_genre_id}</td>
+                                <td>{movieGenres.movie_id}</td>
+                                <td>{movieGenres.genre_id}</td>
+                                <td>
+                                    <button
+                                        className="button is-primary is-small mr-2"
+                                        onClick={() => movieGenreHandleUpdate(movieGenres.movie_genre_id)}
+                                        >
+                                        Update
+                                    </button>
+                                    <button
+                                        className="button is-danger is-small"
+                                        onClick={() => movieGenreHandleDelete(movieGenres.movie_genre_id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>Loading...</p>
+            )}
 
         </>
     );

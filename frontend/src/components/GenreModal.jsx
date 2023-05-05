@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const GenreModal = ({ active, handleModal, genre_id, setErrorMessage }) => {
+const GenreModal = ({ active, handleModal, handleGenreModal, genre_id, setErrorMessage }) => {
     const [genre_name, SetGenreName] = useState("");
 
     useEffect(() => {
@@ -28,6 +28,7 @@ const GenreModal = ({ active, handleModal, genre_id, setErrorMessage }) => {
     const cleanFormData = () => {
         SetGenreName("");
     };
+
     const handleCreateGenres = async (e) => {
         e.preventDefault();
         const requestOptions = {
@@ -47,6 +48,7 @@ const GenreModal = ({ active, handleModal, genre_id, setErrorMessage }) => {
             handleModal();
         }
     };
+    
     const handleUpdateGenres = async (e) => {
         e.preventDefault();
         const requestOptions = {
