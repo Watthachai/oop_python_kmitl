@@ -50,7 +50,6 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
       body: JSON.stringify({
         title: title,
         description: description,
-        release_date: release_date,
         cover_image: cover_image,
       }),
     };
@@ -86,24 +85,6 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
       setDescription(data.description);
       setRelease_date(data.release_date);
       setCover_image(data.cover_image);
-      handleModal();
-    }
-  };
-  
-
-  const handleDeleteSeries = async (e) => {
-    e.preventDefault();
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const response = await fetch(`/api/series/${series_id}`, requestOptions);
-    if (!response.ok) {
-      setErrorMessage("Could not delete the series");
-    } else {
-      cleanFormData();
       handleModal();
     }
   };
