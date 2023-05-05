@@ -86,10 +86,14 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
       setRelease_date(data.release_date);
       setCover_image(data.cover_image);
       handleModal();
+      
     }
+    
   };
 
   return (
+
+    
     <div className={`modal ${active ? "is-active" : ""}`}>
       <div className="modal-background" onClick={handleModal}></div>
       <div className="modal-card">
