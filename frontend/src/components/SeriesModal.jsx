@@ -147,7 +147,7 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
               Create
             </button>
           )}
-          <button className="button" onClick={handleModal}>
+          <button className="button" onClick={() => { cleanFormData(); handleModal(); }}>
             Cancel
           </button>
         </footer>
