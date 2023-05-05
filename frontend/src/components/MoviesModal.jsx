@@ -29,7 +29,7 @@ const MoviesModal = ({active, handleModal, movie_id, setErrorMessage}) => {
                 setRating(data.rating);
                 setDescription(data.description);
                 setCoverImage(data.cover_image);
-                setVideoUrl(data.video_url);
+                setVideoUrl(data.video_url); 
             }
         };
 
