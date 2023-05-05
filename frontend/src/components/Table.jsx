@@ -610,10 +610,11 @@ const Table = () => {
                     <thead>
                         <tr><th>MovieID</th>
                             <th>Movie Name</th>
-                            <th>Description</th>
-                            <th>Release Date</th>
+                            <th>Duration</th>
+                            <th>Plote</th>
+                            <th>Date Release</th>
                             <th>Rating</th>
-                            <th>Cover Image</th>
+                            <th>Thumbnils</th>
                             <th>Video URL</th>
                             <th>Action</th>
                         </tr>
@@ -625,9 +626,9 @@ const Table = () => {
                                 <td>{movies.title}</td>
                                 <td>{movies.duration}</td>
                                 <td>{movies.description}</td>
-                                <td>{movies.release_date}</td>
+                                <td>({moment(movies.release_date).format("ll")})</td>
                                 <td>{movies.rating}</td>
-                                <td>{movies.cover_image}</td>
+                                <td><img src={movies.cover_image}/></td>
                                 <td>{movies.video_url}</td>
                             <td>
                                 <button

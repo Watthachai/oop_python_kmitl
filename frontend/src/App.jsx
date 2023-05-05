@@ -34,9 +34,22 @@ const App = () => {
   }, []);
 
   return (
-    <>
-    <Table/>
-    </>
+    <Router>
+      <Switch>
+        <Route path="/register">
+          <Register />
+        </Route>
+        <Route path="/">
+          {!token ? (
+            <div className="columns">
+              <Login />
+            </div>
+          ) : (
+            <Movie />
+          )}
+        </Route>
+      </Switch>
+    </Router>
   );
 };
 
