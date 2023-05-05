@@ -6,7 +6,7 @@ import Login from "./Login";
 import {Routes, Route, useHistory } from 'react-router-dom';
 
 const Register = () => {
-  const navigate = useHistory ();
+  const history = useHistory ();
 
 
   const [email, setEmail] = useState("");
@@ -37,7 +37,7 @@ const Register = () => {
   };
 
   const handleClick = () => {
-    navigate.push('/');
+    history.push('/');
   }
 
   const  handleSubmit = (e) => {

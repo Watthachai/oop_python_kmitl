@@ -1,128 +1,140 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContex, useEffect, useState } from "react";
 import moment from "moment";
 
 import ErrorMessage from "./ErrorMessage";
-import LeadModal from "./LeadModal";
+import SeriesModal from "./SeriesModal";
 import { UserContext } from "../context/UserContext";
 
 const Table = () => {
-  const [token] = useContext(UserContext);
-  const [leads, setLeads] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loaded, setLoaded] = useState(false);
-  const [activeModal, setActiveModal] = useState(false);
-  const [id, setId] = useState(null);
+    //const [token] = UserContext(UserContext);
+    const [series, setSeries] = useState(null);
 
-  const handleUpdate = async (id) => {
-    setId(id);
-    setActiveModal(true);
-  };
 
-  const handleDelete = async (id) => {
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
+    const [errorMessage, setErrorMessage] = useState("");
+    const [loaded, setLoaded] = useState(false);
+    const [activeModal, setActiveModal] = useState("");
+    const [series_id, setSereseries_id] = useState(null);
+
+    const handleCreate = () => {
+        
+        setSereseries_id(null);
+        setActiveModal(true);
+        
     };
-    const response = await fetch(`/api/leads/${id}`, requestOptions);
-    if (!response.ok) {
-      setErrorMessage("Failed to delete lead");
-    }
 
-    getLeads();
-  };
-
-  const getLeads = async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
+    const handleUpdate = async (series_id) => {
+        setSereseries_id(series_id);
+        setActiveModal(true);
     };
-    const response = await fetch("/api/leads", requestOptions);
-    if (!response.ok) {
-      setErrorMessage("Something went wrong. Couldn't load the leads");
-    } else {
-      const data = await response.json();
-      setLeads(data);
-      setLoaded(true);
-    }
-  };
 
-  useEffect(() => {
-    getLeads();
-  }, []);
+    const handleDelete = async (series_id) => {
+        const requestOptions = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const response = await fetch(`/api/series/${series_id}`, requestOptions);
+        if (!response.ok) {
+            setErrorMessage("Failed to delete series");
+        }
 
-  const handleModal = () => {
-    setActiveModal(!activeModal);
-    getLeads();
-    setId(null);
-  };
+        getSeries();
+    };
 
-  return (
-    <>
-      <LeadModal
-        active={activeModal}
-        handleModal={handleModal}
-        token={token}
-        id={id}
-        setErrorMessage={setErrorMessage}
-      />
-      <button
-        className="button is-fullwidth mb-5 is-primary"
-        onClick={() => setActiveModal(true)}
-      >
-        Create Lead
-      </button>
-      <ErrorMessage message={errorMessage} />
-      {loaded && leads ? (
-        <table className="table is-fullwidth">
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Company</th>
-              <th>Email</th>
-              <th>Note</th>
-              <th>Last Updated</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leads.map((lead) => (
-              <tr key={lead.id}>
-                <td>{lead.first_name}</td>
-                <td>{lead.last_name}</td>
-                <td>{lead.company}</td>
-                <td>{lead.email}</td>
-                <td>{lead.note}</td>
-                <td>{moment(lead.date_last_updated).format("MMM Do YY")}</td>
-                <td>
-                  <button
-                    className="button mr-2 is-info is-light"
-                    onClick={() => handleUpdate(lead.id)}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="button mr-2 is-danger is-light"
-                    onClick={() => handleDelete(lead.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>Loading</p>
-      )}
-    </>
-  );
+    const getSeries = async () => {
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const response = await fetch("/api/series", requestOptions);
+        if (!response.ok) {
+            setErrorMessage("Something went wrong. Couldn't load the series");
+        } else {
+            const data = await response.json();
+            setSeries(data);
+            setLoaded(true);
+        }
+    };
+
+    useEffect(() => {
+        getSeries();
+    }, []);
+
+    const handleModal = () => {
+        setActiveModal(!activeModal);
+        getSeries();
+        setSereseries_id(null);
+    };
+
+    return (
+        <>
+            <SeriesModal
+                active={activeModal}
+                handleModal={handleModal}
+                series_id={series_id}
+                setErrorMessage={setErrorMessage}
+            />
+
+            <div className="columns is-mobile is-centered">
+            <div className="column">
+                <p className="bd-notification is-primary">
+                    <h1 style={{paddingLeft:20, fontWeight:"bolder", fontSize:40}}>Series Table</h1>
+                </p>
+            </div>
+            </div>
+            
+            <button 
+                className="button is-fullwidth is-success is-focused"
+                
+                onClick={() => handleCreate()}
+            >
+                Create Series
+            </button>
+            <ErrorMessage message={errorMessage} />
+            {loaded && series ? (
+                <table className="table is-fullwidth is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Descripton</th>
+                            <th>Release Date</th>
+                            <th>Image Cover</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {series.map((series) => (
+                            <tr key={series.series_series_id}>
+                                <td>{series.title}</td>
+                                <td>{series.description}</td>
+                                <td>{series.release_date}</td>
+                                <td>{series.cover_image}</td>
+                                <td>
+                                    <button
+                                        className="button is-primary is-small mr-2"
+                                        onClick={() => handleUpdate(series.series_id)}
+                                    >
+                                        Update
+                                    </button>
+                                    <button
+                                        className="button is-danger is-small"
+                                        onClick={() => handleDelete(series.series_id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>Loading...</p>
+            )}
+        </>
+    );
 };
 
 export default Table;
