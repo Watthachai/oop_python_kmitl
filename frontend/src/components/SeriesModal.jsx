@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  //const [release_date, setRelease_date] = useState("");
+  const [release_date, setRelease_date] = useState("");
   const [cover_image, setCover_image] = useState("");
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
         const data = await response.json();
         setTitle(data.title);
         setDescription(data.description);
-        //setRelease_date(data.release_date);
+        setRelease_date(data.release_date);
         setCover_image(data.cover_image);
       }
     };
@@ -36,7 +36,7 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
   const cleanFormData = () => {
     setTitle("");
     setDescription("");
-    //setRelease_date("");
+    setRelease_date("");
     setCover_image("");
   };
 
@@ -50,7 +50,7 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
       body: JSON.stringify({
         title: title,
         description: description,
-        //release_date: release_date,
+        release_date: release_date,
         cover_image: cover_image,
       }),
     };
@@ -73,7 +73,7 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
       body: JSON.stringify({
         title: title,
         description: description,
-        //release_date: release_date,
+        release_date: release_date,
         cover_image: cover_image,
       }),
     };
@@ -84,7 +84,7 @@ const SeriesModal = ({ active, handleModal, series_id, setErrorMessage }) => {
       const data = await response.json();
       setTitle(data.title);
       setDescription(data.description);
-      //setRelease_date(data.release_date);
+      setRelease_date(data.release_date);
       setCover_image(data.cover_image);
       handleModal();
     }

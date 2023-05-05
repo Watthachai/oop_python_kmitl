@@ -16,8 +16,10 @@ const Table = () => {
     const [series_id, setSereseries_id] = useState(null);
 
     const handleCreate = () => {
+        
         setSereseries_id(null);
         setActiveModal(true);
+        
     };
 
     const handleUpdate = async (series_id) => {
@@ -75,8 +77,17 @@ const Table = () => {
                 series_id={series_id}
                 setErrorMessage={setErrorMessage}
             />
-            <button
-                className="button is-fullwseries_idth mb-5 is-primary"
+
+            <div className="columns is-mobile is-centered">
+            <div className="column">
+                <p className="bd-notification is-primary">
+                    <h1 style={{paddingLeft:20, fontWeight:"bolder", fontSize:40}}>Series Table</h1>
+                </p>
+            </div>
+            </div>
+            
+            <button 
+                className="button is-fullwidth is-success is-focused"
                 
                 onClick={() => handleCreate()}
             >
@@ -84,13 +95,14 @@ const Table = () => {
             </button>
             <ErrorMessage message={errorMessage} />
             {loaded && series ? (
-                <table className="table is-fullwseries_idth is-hoverable">
+                <table className="table is-fullwidth is-hoverable">
                     <thead>
                         <tr>
                             <th>Title</th>
                             <th>Descripton</th>
                             <th>Release Date</th>
                             <th>Image Cover</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
